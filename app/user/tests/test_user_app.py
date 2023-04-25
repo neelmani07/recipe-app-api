@@ -31,7 +31,7 @@ class PublicUserApiTests(TestCase):
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
-        self.assertEqual(res.status_code,status.HTTTP_201_CREATED)
+        self.assertEqual(res.status_code,status.HTTP_201_CREATED)
         user = get_user_model().objects.get(email=payload['email'])
         self.assertTrue(user.check_password(payload['password']))
         self.assertNotIn('password',res.data)
@@ -44,7 +44,7 @@ class PublicUserApiTests(TestCase):
             'name': 'Test Name',
         }
         create_user(**payload)
-        res = self.Client.post(CREATE_USER_URL, payload)
+        res = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -52,9 +52,9 @@ class PublicUserApiTests(TestCase):
     def test_password_tpp_short_error(self):
         """Test if error is returned if password is less than 5 chars"""
         payload = {
-            'email': 'test@example.com',
-            'password': 'testpass123',
-            'name': 'Test Name',
+            'email': 'test2@example.com',
+            'password': 'pw',
+            'name': 'Test name',
         }
         res = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
@@ -62,7 +62,3 @@ class PublicUserApiTests(TestCase):
             email = payload['email']
         ).exists()
         self.assertFalse(user_exists)
-
-
-
-
