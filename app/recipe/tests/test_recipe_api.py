@@ -14,13 +14,13 @@ from core.models import Recipe
 
 from recipe.serializers import RecipeSerializer
 
-RECIPES_URL = reverse('recipe-list')
+RECIPES_URL = reverse('recipe:recipe-list')
 
 
 def create_recipe(user, **params):
     """create and return a sample recipe."""
     defaults = {
-        'time': 'sample recipe title',
+        'title': 'Sample recipe title',
         'time_minutes': 22,
         'price': Decimal('5.25'),
         'description': 'Sample description',
