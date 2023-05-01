@@ -1,5 +1,5 @@
 """
-Test for the user API
+Tests for the user API.
 """
 
 from django.test import TestCase
@@ -9,17 +9,19 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 
+
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
 ME_URL = reverse('user:me')
 
+
 def create_user(**params):
-    """create and return a new user"""
+    """Create and return a new user."""
     return get_user_model().objects.create_user(**params)
 
 
 class PublicUserApiTests(TestCase):
-    """Test the public feature of the user API"""
+    """Test the public features of the user API."""
 
     def setUp(self):
         self.client = APIClient()
@@ -39,7 +41,7 @@ class PublicUserApiTests(TestCase):
         self.assertNotIn('password',res.data)
 
     def test_user_with_email_exists_error(self):
-        """Test if user exist with the email already"""
+        """Test error returned if user exist with the email already."""
         payload = {
             'email': 'test@example.com',
             'password': 'testpass123',
@@ -52,7 +54,7 @@ class PublicUserApiTests(TestCase):
 
 
     def test_password_too_short_error(self):
-        """Test if error is returned if password is less than 5 chars"""
+        """Test an error is returned if password is less than 5 chars."""
         payload = {
             'email': 'test2@example.com',
             'password': 'pw',
