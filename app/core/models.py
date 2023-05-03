@@ -1,5 +1,5 @@
 """
-Database moels
+Database models.
 """
 from django.conf import settings
 from django.db import models
@@ -11,10 +11,10 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    """Manager for user"""
+    """Manager for user."""
 
-    def create_user(self,email,password=None, **extra_field):
-        """create, save and return a new user"""
+    def create_user(self, email, password=None, **extra_field):
+        """Create, save and return a new user"""
         if not email:
             raise ValueError('User must have an email address')
         user = self.model(email=self.normalize_email(email), **extra_field)
@@ -34,8 +34,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """User in the system"""
-    email =models.EmailField(max_length=255, unique=True)
+    """User in the system."""
+    email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -56,6 +56,19 @@ class Recipe(models.Model):
     time_minutes = models.IntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     link = models.CharField(max_length=255, blank=True)
+    tag = models.ManyToManyField('Tag')
 
     def __str__(self):
         return self.title
+
+
+class Tag(models.Model):
+    """Tag object."""
+    user = models.ForeignKey(
+       settings.AUTH_USER_MODEL,
+       on_delete=models.CASCADE,
+    )
+    name = models.CharField(max_length=225)
+
+    def __str__(self):
+        return self.name
