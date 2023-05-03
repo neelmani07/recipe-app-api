@@ -1,5 +1,5 @@
 """
-Test for recipe APIs
+Tests for recipe API.
 """
 from decimal import Decimal
 
@@ -40,6 +40,7 @@ def create_recipe(user, **params):
     recipe = Recipe.objects.create(user=user, **defaults)
     return recipe
 
+
 def create_user(**params):
     """Create and return a new user."""
     return get_user_model().objects.create_user(**params)
@@ -72,6 +73,7 @@ class PrivateRecipeApiTests(TestCase):
         create_recipe(user=self.user)
 
         res = self.client.get(RECIPES_URL)
+
         recipes = Recipe.objects.all().order_by('-id')
         serializer = RecipeSerializer(recipes, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -111,7 +113,7 @@ class PrivateRecipeApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         recipe = Recipe.objects.get(id=res.data['id'])
-        for k,v in payload.items():
+        for k, v in payload.items():
             self.assertEqual(getattr(recipe, k), v)
         self.assertEqual(recipe.user, self.user)
 
@@ -130,8 +132,8 @@ class PrivateRecipeApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         recipe.refresh_from_db()
-        for k,v in payload.items():
-            self.assertEqual(getattr(recipe, k), v)
+        self.assertEqual(recipe.title, payload['title'])
+        self.assertEqual(recipe.link, original_link)
         self.assertEqual(recipe.user, self.user)
 
     def test_full_update(self):

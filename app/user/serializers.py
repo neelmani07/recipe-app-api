@@ -1,7 +1,6 @@
 """
-Serializers for the USER API View.
+Serializers for the user API View.
 """
-
 from django.contrib.auth import (
     get_user_model,
     authenticate,

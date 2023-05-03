@@ -36,8 +36,8 @@ class PrivateRecipeApiTests(TestCase):
     """Test authenticated API requests."""
 
     def setUp(self):
-        self.client = APIClient()
         self.user = create_user()
+        self.client = APIClient()
         self.client.force_authenticate(self.user)
 
     def test_retrieve_tags(self):

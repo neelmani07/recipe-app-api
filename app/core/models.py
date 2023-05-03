@@ -11,20 +11,20 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    """Manager for user."""
+    """Manager for users."""
 
-    def create_user(self, email, password=None, **extra_field):
-        """Create, save and return a new user"""
+    def create_user(self, email, password=None, **extra_fields):
+        """Create, save and return a new user."""
         if not email:
-            raise ValueError('User must have an email address')
-        user = self.model(email=self.normalize_email(email), **extra_field)
+            raise ValueError('User must have an email address.')
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
     def create_superuser(self, email, password):
-        """Create and return a new super user."""
+        """Create and return a new superuser."""
         user = self.create_user(email, password)
         user.is_staff = True
         user.is_superuser = True
@@ -56,19 +56,20 @@ class Recipe(models.Model):
     time_minutes = models.IntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     link = models.CharField(max_length=255, blank=True)
-    tag = models.ManyToManyField('Tag')
+    tags = models.ManyToManyField('Tag')
 
     def __str__(self):
         return self.title
 
 
 class Tag(models.Model):
-    """Tag object."""
+    """Tag for filtering recipes."""
+
+    name = models.CharField(max_length=225)
     user = models.ForeignKey(
        settings.AUTH_USER_MODEL,
        on_delete=models.CASCADE,
     )
-    name = models.CharField(max_length=225)
 
     def __str__(self):
         return self.name
