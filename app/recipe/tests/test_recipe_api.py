@@ -383,30 +383,30 @@ class ImageuploadTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_mode().objects.create_user(
+        self.user = get_user_model().objects.create_user(
             'user@example.com',
             'password123',
         )
-        self.client.force_authentication(self.user)
+        self.client.force_authenticate(self.user)
         self.recipe = create_recipe(user=self.user)
 
     def tearDown(self):
-        self.recipe.image.deleted()
+        self.recipe.image.delete()
 
-    def testUploadImage(self):
+    def test_upload_image(self):
         """Test uploading an image to a recipe."""
         url = image_upload_url(self.recipe.id)
         with tempfile.NamedTemporaryFile(suffix='.jpg') as image_file:
             img = Image.new('RGB', (10,10))
             img.save(image_file, format='JPEG')
             image_file.seek(0)
-            payload = {'import': image_file}
+            payload = {'image': image_file}
             res = self.client.post(url, payload, format='multipart')
 
         self.recipe.refresh_from_db()
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn('image', res.data)
-        self.assertTrue(os.path.exist(self.recipe.image.path))
+        self.assertTrue(os.path.exists(self.recipe.image.path))
 
     def test_upload_image_bad_request(self):
         """Test uploading invalid image."""
