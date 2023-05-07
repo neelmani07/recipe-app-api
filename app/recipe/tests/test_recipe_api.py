@@ -76,7 +76,7 @@ class PrivateRecipeApiTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = create_user(email='user@example.com', password='testpass123')
+        self.user = create_user(email='user@example.com', password='password123')
         self.client.force_authenticate(self.user)
 
     def test_retrieve_recipes(self):
@@ -234,7 +234,7 @@ class PrivateRecipeApiTests(TestCase):
         tag_indian = Tag.objects.create(user=self.user, name = 'Indian')
         payload = {
             'title': 'Pongal',
-            'time_minutes': '20',
+            'time_minutes': 20,
             'price': Decimal(2.0),
             'tags': [{'name': 'Indian'},{'name': 'Breakfast'}],
         }
@@ -258,7 +258,7 @@ class PrivateRecipeApiTests(TestCase):
 
         payload = {'tags':[{'name':'Lunch'}]}
         url = detail_url(recipe.id)
-        res = self.client.patch(url, payload, 'json')
+        res = self.client.patch(url, payload, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         new_tag = Tag.objects.get(user=self.user, name='Lunch')
@@ -273,13 +273,13 @@ class PrivateRecipeApiTests(TestCase):
         tag_lunch = Tag.objects.create(user=self.user, name='Lunch')
         payload = {'tags':[{'name':'Lunch'}]}
         url = detail_url(recipe.id)
-        res = self.client.patch(url, payload, 'json')
+        res = self.client.patch(url, payload, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn(tag_lunch, recipe.tags.all())
         self.assertNotIn(tag_breakfast, recipe.tags.all())
 
-    def test_clear_recipe_tag(self):
+    def test_clear_recipe_tags(self):
         """Test clearing a recipe tags."""
         tag = Tag.objects.create(user=self.user, name='Dessert')
         recipe = create_recipe(user=self.user)
@@ -287,7 +287,7 @@ class PrivateRecipeApiTests(TestCase):
 
         payload = {'tags': []}
         url = detail_url(recipe.id)
-        res = self.client.patch(url, payload, 'json')
+        res = self.client.patch(url, payload, format='json')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(recipe.tags.count(), 0)
 
@@ -378,7 +378,7 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(recipe.ingredients.count(), 0)
 
 
-class ImageuploadTests(TestCase):
+class ImageUploadTests(TestCase):
     """Tests for the image upload API."""
 
     def setUp(self):
