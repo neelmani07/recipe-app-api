@@ -83,5 +83,5 @@ class Ingredient(models.Model):
         on_delete=models.CASCADE,
     )
 
-    def _str_(self):
+    def __str__(self):
         return self.name
